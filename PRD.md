@@ -7,8 +7,8 @@
 | **Prodotto** | ScuolaChill |
 | **Team** | DevRoadsters |
 | **Autori** | Antonio Mihut - Mattia Artico |
-| **Versione** | 1.0 |
-| **Data** | 25/09/2026 |
+| **Versione** | 1.3 |
+| **Data** | 30/09/2026 |
 | **Stato** | *Bozza*  |
 
 ### Storico delle versioni
