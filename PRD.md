@@ -1,5 +1,3 @@
-# PRD Template in modifica
-
 # PRD di ScuolaChill · Team DevRoadsters
 
 ---
@@ -19,10 +17,10 @@
 
 | Versione | Data | Autore | Cosa è cambiato e perché |
 | --- | --- | --- | --- |
-| 0.1 | 25/09/2026 | Mattia Artico e Antonio Mihut | Prima stesura (resta da vedere).  |
+| 0.1 | 25/09/2026 | Mattia Artico e Antonio Mihut | Prima stesura iniziale.  |
 | 0.2 | 26/09/2026 | Mattia Artico e Antonio Mihut | Definizione dei destinatari e del contesto d'uso |
 | 0.3 | 29/09/2026 | Mattia Artico e Antonio Mihut | Definizione della panoramica e dei casi d'uso |
-| 0.4 | 30/06/2026 | Mattia Artico | Definizione dei requisiti funzionali |
+| 0.4 | 30/09/2026 | Mattia Artico | Definizione dei requisiti funzionali |
 | 1.0 | 09/10/2026 | Mattia Artico e Antonio Mihut | Rimozione della rilevazione presenze: in ambito ITS è gestita a livello regionale. Aggiunta della gestione comunicazioni. Aggiunta dei requisiti non funzionali, requisiti impliciti, assunzioni, vincoli, dipendenze e stime di carico. Sistemazione di inesattezze nel documento. |
 
 ---
@@ -66,7 +64,7 @@ Dal punto di vista architetturale e funzionale, il sistema copre l'intero ciclo 
 
 ## Stakeholder
 
-| Stakeholder | Cosa fa | Cosa gli interessa | Come lo/li coinvolgete |
+| Stakeholder | Responsabilità | Interessi | Modalità di coinvolgimento |
 | --- | --- | --- | --- |
 | Direttore | Configura la scuola, crea docenti e studenti, organizza le classi e consulta la situazione generale | Avere una visione completa e aggiornata della scuola, ridurre il lavoro amministrativo e garantire la correttezza dei dati | Validazione dei requisiti, revisione dei prototipi e collaudo delle funzioni principali |
 | Docente | Gestiscono il materiale didattico, creano verifiche, assegnano voti e consultano le classi | Caricare i link ai materiali, gestire le verifiche senza errori e inserire i voti in modo semplice e sicuro | Osservazione delle attività quotidiane, test dei flussi e raccolta di feedback |
@@ -92,8 +90,6 @@ Un **Istituto Tecnologico Superiore (ITS) diffuso sul territorio regionale**, st
 | Connettività | Previsto un traffico medio di 10 Mbps, con picchi fino a 100 Mbps: limite cautelativo desiderabile di 200 Mbps. Previsto un collegamento misto sia da telefono che da PC. |
 
 ### Gli archetipi
-
-Arricchisci gli archetipi della traccia.
 
 | ID | Archetipo | Contesto d'uso | Competenze digitali | Dispositivo principale | Frequenza d'uso |
 | --- | --- | --- | --- | --- | --- |
@@ -369,7 +365,7 @@ Motivazione: mantenere affidabile lo storico senza impedire la correzione di err
 
 **FR-EXT-01 · Mancato invio dell’email di attivazione** (collegato a DIR-02)
 
-Proposta: se il servizio email non è disponibile, il profilo viene salvato con invito in attesa e l’invio può essere riprovato o reinviato dal Direttore. L’utente non accede finché non completa l’attivazione.
+Scelta: se il servizio email non è disponibile, il profilo viene salvato con invito in attesa e l’invio può essere riprovato o reinviato dal Direttore. L’utente non accede finché non completa l’attivazione.
 
 Motivazione: un disservizio email non deve causare la perdita delle informazioni di profilo già inserite.
 
@@ -377,29 +373,26 @@ Motivazione: un disservizio email non deve causare la perdita delle informazioni
 
 ## Requisiti non funzionali
 
-Ogni requisito ha una soglia, una condizione e un modo per verificarlo. Ed è collegato ad almeno una user story.
-
 | ID | Famiglia | Requisito | Soglia e condizione | Come si verifica | Storie collegate |
 | --- | --- | --- | --- | --- | --- |
 | NFR-01 | Prestazioni | Tempo di risposta nella consultazione dell'orario/calendario | Risposta delle chiamate API di lettura in meno di $2,0\text{ s}$ per il 95% delle richieste. | Misurazione dei tempi di risposta tramite la scheda *Network* di *DevTools* o *Postman*. | STU-01, DOC-01 |
 | NFR-02 | Sicurezza | *Controllo degli accessi basato sui ruoli (RBAC)* | Blocco totale dell'accesso a rotte riservate se l'utente non possiede il ruolo adatto (es. uno studente non può invocare API di voto). | Invio di richieste API protette utilizzando i token di ruoli diversi e verifica delle risposte `401 Unauthorized` o `403 Forbidden`. | DIR-01, DIR-02, DOC-03, STU-02 |
 | NFR-03 | Usabilità | Semplicità e chiarezza dell'interfaccia | Esecuzione delle operazioni quotidiane (consultazione orario, inserimento voto) entro un massimo di 3-4 click. | Sessioni di prova pratica e collaudo guidato con utenti studenti e docenti. | STU-01, STU-02, DOC-01, DOC-03 |
-| NFR-04 | Disponibilità | Persistenza garantita dei voti *(Requisito Implicito* | Nessuna perdita di voti confermati dal sistema; salvataggio tramite transazioni atomiche sul database. | **Test di inserimento, ricaricamento pagina e verifica diretta dell'avvenuta scrittura sulla tabella DB.** | DOC-03, STU-02, DIR-05 |
+| NFR-04 | Disponibilità | Persistenza garantita dei voti *(Requisito Implicito)* | Nessuna perdita di voti confermati dal sistema; salvataggio tramite transazioni atomiche sul database. | **Test di inserimento, ricaricamento pagina e verifica diretta dell'avvenuta scrittura sulla tabella DB.** | DOC-03, STU-02, DIR-05 |
 | NFR-05 | Ambientale | Efficienza energetica lato client | Dimensione contenuta dell'applicazione frontend e assenza di chiamate di *polling* continuo e infruttuoso verso il server. | Analisi del traffico di rete generato a pagina ferma tramite la scheda *Network* del browser. | STU-01, DOC-01 |
 | NFR-06 | Supporto (Trasversale) | Documentazione delle API (OpenAPI) | 100% delle rotte esposte dal backend documentate con specifica OpenAPI 3.0 e consultabili graficamente via Swagger UI. | Navigazione della rotta `/api-docs` (o equivalente) e verifica della presenza di rotte, parametri e modelli di risposta. | DIR-01, DOC-02, STU-01 |
 | NFR-07 | Interazione | Responsive design e compatibilità multi-dispositivo | Layout adatta per la fruizione sia su schermi mobile (smartphone, a partire da $320\text{px}$) che su schermi desktop (PC di laboratorio). | Ridimensionamento della finestra del browser e test di navigazione tramite l'emulatore dispositivi di *DevTools*. | STU-01, STU-02, DOC-01 |
 | NFR-08 | Conformità | Rispetto della privacy e tutela dei dati (GDPR) | Conservazione dei dati personali e delle valutazioni su database allocato in datacenter all'interno dell'Unione Europea. | Controllo della regione geografica selezionata nelle impostazioni del provider Cloud (es. `eu-west`). | DIR-02, STU-03 |
 | NFR-9 | Scalabilità | Sostegno della crescita della popolazione scolastica | L'architettura deve supportare fino a 1.100 utenti registrati e picchi di 450 utenti contemporanei senza richiedere modifiche al codice. | Simulazione di chiamate API simultanee mediante script o test manuali paralleli su più schede/client. | DIR-01, DOC-01, STU-01 |
-| NFR-10 | **Supporto** *(Trasversale)* | Documentazione delle API (OpenAPI) | 100% delle rotte esposte dal backend documentate con specifica OpenAPI 3.0 e consultabili graficamente via Swagger UI. | Navigazione della rotta `/api-docs` (o equivalente) e verifica della presenza di rotte, parametri e modelli di risposta. | DIR-01, DOC-02, STU-01 |
-| NFR-11 | **Supporto** *(Trasversale)* | Gestione uniforme degli errori | Tutte le risposte di errore dell'API devono restituire una struttura JSON standardizzata contenente codice di stato e messaggio chiaro. | Invio di richieste errate/incomplete (es. payload mancante) e verifica della struttura JSON restituita (`code`, `message`). | DIR-01, DOC-03, STU-02 |
-| NFR-12 | **Supporto** *(Trasversale)* | Separazione degli ambienti (Dev e Prod) | Completa separazione tra ambiente di sviluppo locale e ambiente Cloud di test/produzione (database, credenziali e variabili d'ambiente distinti). | *Code review* dei file di configurazione (`.env.example`, `.env.local`, `.env.production`). | DIR-02, DOC-03 |
-| NFR-13 | Prestazioni | Tempo di registrazione valutazioni | Salvataggio ed esito della registrazione voto in meno di $2,0\text{ s}$. | Ispezione dei tempi di chiamata durante l'invio della form di valutazione nei test. | DOC-03, STU-02 |
-| NFR-14 | **Prestazioni** *(Trasversale)* | Paginazione delle risorse ampie | Tutte le API che restituiscono elenchi ampi (studenti, voti) devono restituire i dati paginati (default 20-50 elementi per pagina). | Verifica dei parametri di query `page` e `limit` e della risposta JSON nell'interfaccia *Swagger UI*. | DIR-01, DOC-04, STU-02 |
-| NFR-15 | Disponibilità | Stabilità e continuità del servizio | Assenza di crash del server o blocchi dell'applicazione durante la finestra di lezione (08:00 – 18:00). | Monitoraggio dei log del server di backend durante la fase di test e la dimostrazione del progetto. | DIR-03, DOC-01, STU-01 |
+| NFR-10 | **Supporto** *(Trasversale)* | Gestione uniforme degli errori | Tutte le risposte di errore dell'API devono restituire una struttura JSON standardizzata contenente codice di stato e messaggio chiaro. | Invio di richieste errate/incomplete (es. payload mancante) e verifica della struttura JSON restituita (`code`, `message`). | DIR-01, DOC-03, STU-02 |
+| NFR-11 | **Supporto** *(Trasversale)* | Separazione degli ambienti (Dev e Prod) | Completa separazione tra ambiente di sviluppo locale e ambiente Cloud di test/produzione (database, credenziali e variabili d'ambiente distinti). | *Code review* dei file di configurazione (`.env.example`, `.env.local`, `.env.production`). | DIR-02, DOC-03 |
+| NFR-12 | Prestazioni | Tempo di registrazione valutazioni | Salvataggio ed esito della registrazione voto in meno di $2,0\text{ s}$. | Ispezione dei tempi di chiamata durante l'invio della form di valutazione nei test. | DOC-03, STU-02 |
+| NFR-13 | **Prestazioni** *(Trasversale)* | Paginazione delle risorse ampie | Tutte le API che restituiscono elenchi ampi (studenti, voti) devono restituire i dati paginati (default 20-50 elementi per pagina). | Verifica dei parametri di query `page` e `limit` e della risposta JSON nell'interfaccia *Swagger UI*. | DIR-01, DOC-04, STU-02 |
+| NFR-14 | Disponibilità | Stabilità e continuità del servizio | Assenza di crash del server o blocchi dell'applicazione durante la finestra di lezione (08:00 – 18:00). | Monitoraggio dei log del server di backend durante la fase di test e la dimostrazione del progetto. | DIR-03, DOC-01, STU-01 |
 
 ### Requisiti impliciti
 
-| Chi avete intervistato | Cosa ha detto | Requisito che ne avete ricavato |
+| Intervistati | Esigenze | Requisiti derivati |
 | --- | --- | --- |
 | A.M. | *"I voti devono restare salvati anche se chiudo l'app."* | [NFR-04] |
 | G.F. | *"Devo poter ritrovare i voti delle verifiche passate."* | [STU-02] |
@@ -459,13 +452,13 @@ Ogni requisito ha una soglia, una condizione e un modo per verificarlo. Ed è co
 
 ## Scelte tecnologiche
 
-| Area | Scelta | Alternativa considerata | Perché avete scelto così |
+| Area | Scelta | Alternativa considerata | Motivazioni |
 | --- | --- | --- | --- |
 | Backend | Express.js | FastAPI/Django | Express unifica JavaScript tra client e server, riducendo il carico cognitivo e accelerando lo sviluppo; è snello e gestisce in modo efficiente le richieste asincrone concorrenti. Python avrebbe imposto un cambio di contesto continuo tra due linguaggi, la gestione di ambienti virtuali, tempi di integrazione più lunghi. |
 | Frontend | React con Vite | Angular | React è già noto nel team e ideale per dashboard SPA a ruoli protetti; Vite assicura compilazione istantanea e build statiche leggere. Angular richiede concetti complessi (RxJS, Dependency Injection) rischiosi per le scadenze. |
 | Database | SupaBase/PostgreSQL | MongoDB | I dati scolastici sono strettamente relazionali; PostgreSQL garantisce integrità referenziale, vincoli di unicità e consistenza ACID, prevenendo voti orfani o sovrapposizioni d'orario. MongoDB richiederebbe verifiche manuali nel codice rischiando incoerenze. |
 | Provider cloud | Microsoft Azure | Render + Supabase + Vercel | È nel programma ITS e offre con piano studenti 100$ di credito a costo zero senza carta di credito, con datacenter in Italia. I PaaS gratuiti causano frammentazione e latenze da *cold start*. |
-| Servizi cloud | Microsoft Azure | Macchina Virtuale unica (con Docker Compose) | Azure è un’architettura PaaS gestita: isola i carichi, include SSL automatico, backup del DB e scarica il backend salvando slide e PDF direttamente su Blob Storage. Una VPS Linux richiederebbe gestione manuale di Nginx, certificati SSL, OS e backup, sottraendo tempo allo sviluppo del CRM. |
+| Servizi cloud | Microsoft Azure | Macchina Virtuale unica (con Docker Compose) | Azure è un’architettura PaaS gestita: isola i carichi, include SSL automatico, backup del DB e scarica il backend. Una VPS Linux richiederebbe gestione manuale di Nginx, certificati SSL, OS e backup, sottraendo tempo allo sviluppo del CRM. |
 | Regione (cloud) | Italia | Tutte le altre | Assicura latenza minima per utenti in Italia e piena conformità GDPR/AGID sulla sovranità dei dati scolastici sul territorio nazionale.  |
 | Servizio esterno | Resend (Email transazionali via API) | Azure Communication Services / Server SMTP autonomo (Nodemailer con Gmail) | Servizio dedicato per credenziali e notifiche con piano free (100 email/giorno), API REST immediata in Node.js ed elevata affidabilità di recapito. Server SMTP o account personali finiscono nello spam; Azure Communication Services richiede una lunga configurazione DNS e verifica dominio. |
 
